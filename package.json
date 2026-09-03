@@ -1,0 +1,24 @@
+{
+  "name": "flowpilot",
+  "version": "0.1.0",
+  "description": "A local-first release notes workflow runner.",
+  "type": "module",
+  "private": false,
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "npm run build && node --watch dist/server.js",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "smoke": "npm run build && node scripts/smoke.mjs",
+    "package:release": "node scripts/package-release.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "typescript": "^5.8.3"
+  }
+}

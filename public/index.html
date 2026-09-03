@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0c1324" />
+    <meta name="description" content="FlowPilot：把零散变更变成可发布的说明。" />
+    <title>FlowPilot · 流程小舵手</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="noise"></div>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">✦</div>
+        <div>
+          <div class="brand-name">FlowPilot</div>
+          <div class="brand-subtitle">流程小舵手 · local-first</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="privacy-badge"><span class="dot"></span> 数据只留在本机</span>
+        <a class="icon-link" href="https://github.com/strive-triumph/flowpilot" target="_blank" rel="noreferrer" aria-label="GitHub">↗</a>
+      </div>
+    </header>
+
+    <main class="page">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">RELEASE NOTES WORKFLOW</p>
+          <h1>把零散变更，<span>变成能发布的说明。</span></h1>
+          <p class="hero-copy">粘贴提交记录或工作笔记，交给三个本地阶段处理。无需账号、无需 API Key，先把流程跑通。</p>
+        </div>
+        <div class="hero-orbit" aria-hidden="true"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="orbit-core">✦</div></div>
+      </section>
+
+      <section class="workspace-grid">
+        <aside class="panel input-panel">
+          <div class="panel-heading">
+            <div><span class="panel-kicker">01</span><h2>输入变更</h2></div>
+            <span class="provider-pill">DEMO PROVIDER</span>
+          </div>
+          <form id="run-form">
+            <label for="input-text">版本变更 / 工作笔记</label>
+            <textarea id="input-text" maxlength="8000" placeholder="例如：\n新增 CSV 导出\n修复登录超时\n优化首页加载速度"></textarea>
+            <div class="input-meta"><span id="char-count">0 / 8000</span><span>离线规则引擎</span></div>
+            <button class="primary-button" type="submit"><span>生成并运行</span><span class="button-arrow">→</span></button>
+          </form>
+          <div class="example-block">
+            <div class="example-title">试试一个例子</div>
+            <button class="example-chip" data-example="新增批量导出功能；优化搜索速度；修复移动端登录超时">产品迭代</button>
+            <button class="example-chip" data-example="更新安装文档；修复 Docker 启动问题；增加健康检查接口">工程发布</button>
+          </div>
+          <div class="privacy-note"><span>⌁</span><p>Demo 模式不会联网，也不会执行 shell。运行记录保存在本机 <code>data/flowpilot.json</code>。</p></div>
+        </aside>
+
+        <section class="panel run-panel">
+          <div class="panel-heading run-heading">
+            <div><span class="panel-kicker">02</span><h2>运行过程</h2></div>
+            <div id="run-actions" class="run-actions hidden"></div>
+          </div>
+          <div id="run-empty" class="empty-state">
+            <div class="empty-icon">◎</div>
+            <h3>还没有运行</h3>
+            <p>从左侧输入几条变更，FlowPilot 会依次整理、撰写和检查。</p>
+          </div>
+          <div id="run-content" class="hidden">
+            <div class="run-title-row"><div><div id="current-status" class="status-label"></div><h3 id="current-title"></h3></div><span id="current-time" class="muted"></span></div>
+            <div id="stages" class="stages"></div>
+            <div class="result-heading"><div><span class="panel-kicker">03</span><h2>最终结果</h2></div><div id="result-actions" class="result-actions"></div></div>
+            <textarea id="markdown-editor" class="markdown-editor" spellcheck="false" placeholder="运行完成后，Markdown 会出现在这里"></textarea>
+            <div class="result-footer"><span id="run-summary" class="muted"></span><button id="save-button" class="secondary-button">保存编辑</button></div>
+          </div>
+        </section>
+
+        <aside class="panel history-panel">
+          <div class="panel-heading"><div><span class="panel-kicker">04</span><h2>历史运行</h2></div><button id="refresh-button" class="refresh-button" title="刷新">↻</button></div>
+          <div id="history-list" class="history-list"></div>
+        </aside>
+      </section>
+    </main>
+    <footer class="footer"><span>FlowPilot 0.1.0</span><span>MIT License · built for a calm release day</span></footer>
+    <div id="toast" class="toast" role="status"></div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
