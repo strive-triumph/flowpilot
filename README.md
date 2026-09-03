@@ -26,6 +26,8 @@ npm start
 ./install.sh
 ```
 
+安装脚本会自动识别源码仓库和 GitHub Release 的预编译归档：前者执行构建，后者直接安装运行时依赖。
+
 Windows PowerShell：
 
 ```powershell

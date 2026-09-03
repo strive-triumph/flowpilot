@@ -1,6 +1,6 @@
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { randomUUID } from 'node:crypto';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { extname, join, normalize, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -14,6 +14,7 @@ const PORT = parsePort(process.env.FLOWPILOT_PORT);
 const HOST = process.env.FLOWPILOT_HOST?.trim() || '127.0.0.1';
 const dataDir = process.env.FLOWPILOT_DATA_DIR?.trim() || join(ROOT, 'data');
 const store = new Store(join(dataDir, 'flowpilot.json'));
+const PACKAGE_VERSION = readPackageVersion();
 const subscribers = new Map<string, Set<ServerResponse>>();
 const activeRuns = new Map<string, { cancelled: boolean }>();
 
@@ -49,7 +50,7 @@ async function route(request: IncomingMessage, response: ServerResponse): Promis
   const pathname = url.pathname;
 
   if (pathname === '/api/health' && method === 'GET') {
-    sendJson(response, 200, { status: 'ok', name: 'flowpilot', version: '0.1.0', provider: 'demo', uptimeSeconds: Math.round(process.uptime()) });
+    sendJson(response, 200, { status: 'ok', name: 'flowpilot', version: PACKAGE_VERSION, provider: 'demo', uptimeSeconds: Math.round(process.uptime()) });
     return;
   }
   if (pathname === '/api/templates' && method === 'GET') {
@@ -212,6 +213,14 @@ function cancelPending(stages: FlowStage[]): void { for (const stage of stages) 
 function wait(ms: number): Promise<void> { return new Promise((resolvePromise) => setTimeout(resolvePromise, ms)); }
 function parsePort(value: string | undefined): number { const port = Number(value ?? 4317); return Number.isInteger(port) && port > 0 && port < 65536 ? port : 4317; }
 function contentType(extension: string): string { return ({ '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.json': 'application/json; charset=utf-8' } as Record<string, string>)[extension] ?? 'application/octet-stream'; }
+function readPackageVersion(): string {
+  try {
+    const packageJson = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) as { version?: unknown };
+    return typeof packageJson.version === 'string' ? packageJson.version : 'unknown';
+  } catch {
+    return 'unknown';
+  }
+}
 function parseInput(value: unknown): string {
   try { return normalizeInput(value); }
   catch (error) { throw new HttpError(400, 'invalid_input', error instanceof Error ? error.message : '变更内容无效'); }
